@@ -1,0 +1,14 @@
+service: pestle
+frameworkVersion: ">=1.44.0"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+
+functions:
+  dispenseIntent:
+    handler: intents.handler
+
