@@ -23,7 +23,7 @@ const DispenseIntentHandler = {
     },
     handle(handlerInput) {
         console.log("Yay I got handled");
-        console.log("input", handlerInput)
+        console.log("slots", handlerInput.requestEnvelope.request.intent.slots)
         
         const speakOutput = 'I\'m on it!';
         // axios.get('http://254b0826.ngrok.io')
