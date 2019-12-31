@@ -1,44 +1,41 @@
 const express = require('express')
 const app = express()
 const http = require('http')
+var rpio = require('rpio');
 
-var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-var LED = new Gpio(4, 'out'); //use GPIO pin 4, and specify that it is output
-var blinkInterval = ''
+
+const LED = 7
+let blinking = false
 
 function runBlink() {
-blinkInterval = setInterval(blinkLED, 250)
-setTimeout(endBlink, 5000)
-}
+  blinking = true
+  for (var i = 0; i < 5; i++) {
+    rpio.write(LED, rpio.HIGH);
+    rpio.sleep(.5);
 
-function blinkLED() { //function to start blinking
-  if (LED.readSync() === 0) { //check the pin state, if the state is 0 (or off)
-    LED.writeSync(1); //set pin state to 1 (turn LED on)
-  } else {
-    LED.writeSync(0); //set pin state to 0 (turn LED off)
+    rpio.write(LED, rpio.LOW);
+    rpio.msleep(500);
   }
-}
-
-function endBlink() { //function to stop blinking
-  clearInterval(blinkInterval); // Stop blink intervals
-  LED.writeSync(0); // Turn LED off
-  LED.unexport(); // Unexport GPIO to free resources
+  blinking = false
 }
 
 
 app.get('/', function (req, res) {
-  	runBlink()
-	console.log('End point hit')
-  res.send(`You found the head\n`)
+  if(!blinking) {
+    runBlink()
+    console.log('End point hit from get')
+    res.send(`You found the head\n`)
+  } else {
+    res.send('led is already blinking')
+  }
+
 })
 
-app.post('/', function (req, res) {
-        runBlink()
-        console.log('End point hit')
-  res.send(`You found the head\n`)
-})
+
 
 const httpServer = http.createServer(app)
+rpio.open(LED, rpio.OUTPUT, rpio.LOW);
+
 
 const port = 3000
 httpServer.listen(port)

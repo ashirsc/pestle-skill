@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "onoff": "^5.0.0"
+    "onoff": "^5.0.0",
+    "rpio": "^1.3.0"
   },
   "devDependencies": {
     "ask-sdk-core": "^2.7.0",
